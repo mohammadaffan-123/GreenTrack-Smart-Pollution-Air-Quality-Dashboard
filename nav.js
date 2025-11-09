@@ -39,9 +39,20 @@ window.addEventListener('DOMContentLoaded', () => {
       // Propagate city to links
       if (currentCity) {
         try {
-          const url = new URL(href, location.origin);
-          url.searchParams.set('city', currentCity);
-          a.setAttribute('href', url.pathname.replace(/\\/g, '/') + url.search);
+          // Check if href is a relative path (just filename)
+          if (!href.startsWith('http') && !href.startsWith('/') && !href.startsWith('.')) {
+            // It's a relative filename like "index.html"
+            const url = new URL(href, location.origin + location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1));
+            url.searchParams.set('city', currentCity);
+            // Use just the filename + search params for relative links
+            const filename = href.split('?')[0];
+            a.setAttribute('href', filename + url.search);
+          } else {
+            // It's an absolute or root-relative path
+            const url = new URL(href, location.origin);
+            url.searchParams.set('city', currentCity);
+            a.setAttribute('href', url.pathname + url.search);
+          }
         } catch (e) {
           console.warn('Error processing navigation link:', href, e);
         }

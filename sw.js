@@ -1,8 +1,8 @@
 // Service Worker for GreenTrack PWA
-const CACHE_NAME = 'greentrack-v2.3.2';
-const STATIC_CACHE = 'greentrack-static-v2.3.2';
-const DYNAMIC_CACHE = 'greentrack-dynamic-v2.3.2';
-const API_CACHE = 'greentrack-api-v2.3.2';
+const CACHE_NAME = 'greentrack-v2.3.3';
+const STATIC_CACHE = 'greentrack-static-v2.3.3';
+const DYNAMIC_CACHE = 'greentrack-dynamic-v2.3.3';
+const API_CACHE = 'greentrack-api-v2.3.3';
 
 // Static assets to cache
 const STATIC_ASSETS = [
