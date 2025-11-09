@@ -1,4 +1,5 @@
 window.addEventListener('DOMContentLoaded', () => {
+  // Get the current page filename
   const path = location.pathname.split('/').pop().toLowerCase() || 'index.html';
   const params = new URLSearchParams(location.search);
   const currentCity = params.get('city') || (localStorage.getItem('selectedCity') || '').trim();
@@ -6,6 +7,14 @@ window.addEventListener('DOMContentLoaded', () => {
   console.log('=== NAV DEBUG ===');
   console.log('Current path:', path);
   console.log('Full pathname:', location.pathname);
+  console.log('Location origin:', location.origin);
+  console.log('Current city:', currentCity);
+
+  // Get the base path (important for GitHub Pages)
+  // For GitHub Pages: /repo-name/
+  // For localhost: /
+  const basePath = location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1);
+  console.log('Base path:', basePath);
 
   // Support both old (.top-nav) and new (.main-nav) navigation structures
   const navSelectors = [
@@ -18,43 +27,48 @@ window.addEventListener('DOMContentLoaded', () => {
     console.log(`Found ${links.length} links with selector: ${selector}`);
     
     links.forEach(a => {
-      const href = a.getAttribute('href');
-      if (!href) return;
+      const originalHref = a.getAttribute('href');
+      if (!originalHref) return;
       
-      const page = href.split('?')[0].toLowerCase();
-      console.log(`Link href: ${href}, Page: ${page}, Match: ${page === path}`);
+      // Extract just the filename from the href
+      const filename = originalHref.split('?')[0].split('/').pop().toLowerCase();
+      console.log(`Link original href: ${originalHref}, Filename: ${filename}, Match: ${filename === path}`);
 
-      // Active state - match both with and without trailing slash
-      const isMatch = page === path || 
-                      page === `/${path}` || 
-                      (path === 'index.html' && (page === '' || page === '/' || page === 'index.html'));
+      // Active state - match by filename only
+      const isMatch = filename === path || 
+                      (path === 'index.html' && (filename === '' || filename === '/' || filename === 'index.html'));
       
       if (isMatch) {
         a.classList.add('active');
-        console.log('Added active class to:', href);
+        console.log('Added active class to:', originalHref);
       } else {
         a.classList.remove('active');
       }
 
-      // Propagate city to links
+      // Propagate city to links - keep the link relative
       if (currentCity) {
         try {
-          // Check if href is a relative path (just filename)
-          if (!href.startsWith('http') && !href.startsWith('/') && !href.startsWith('.')) {
-            // It's a relative filename like "index.html"
-            const url = new URL(href, location.origin + location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1));
-            url.searchParams.set('city', currentCity);
-            // Use just the filename + search params for relative links
-            const filename = href.split('?')[0];
-            a.setAttribute('href', filename + url.search);
-          } else {
-            // It's an absolute or root-relative path
-            const url = new URL(href, location.origin);
-            url.searchParams.set('city', currentCity);
-            a.setAttribute('href', url.pathname + url.search);
+          // Keep it simple - just add/update query params to the filename
+          const searchParams = new URLSearchParams();
+          searchParams.set('city', currentCity);
+          
+          // If the original href has a query string, preserve other params
+          const [file, query] = originalHref.split('?');
+          if (query) {
+            const existingParams = new URLSearchParams(query);
+            existingParams.forEach((value, key) => {
+              if (key !== 'city') {
+                searchParams.set(key, value);
+              }
+            });
           }
+          
+          // Set the href to just filename + params (stays relative)
+          const newHref = file + '?' + searchParams.toString();
+          a.setAttribute('href', newHref);
+          console.log(`Updated href from ${originalHref} to ${newHref}`);
         } catch (e) {
-          console.warn('Error processing navigation link:', href, e);
+          console.warn('Error processing navigation link:', originalHref, e);
         }
       }
     });
