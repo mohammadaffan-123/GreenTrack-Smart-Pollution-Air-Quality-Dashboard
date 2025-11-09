@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pollutants & AQI Scale</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="nav.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <header class="dashboard-header">
+      <nav class="top-nav">
+        <a href="index.html" class="brand">AQI Monitor</a>
+        <ul class="nav-links">
+          <li><a href="index.html">Dashboard</a></li>
+          <li><a href="trends.html">Trends</a></li>
+          <li><a href="pollutants.html">Pollutants</a></li>
+          <li><a href="alerts.html">Alerts</a></li>
+          <li><a href="cities.html">Cities</a></li>
+        </ul>
+      </nav>
+  <h1>Pollutants & AQI Scale</h1>
+  <p style="margin-top:8px"><a href="index.html" class="brand" style="text-decoration:underline;">← Back to Dashboard</a></p>
+    </header>
+
+    <div class="dashboard-grid">
+      <div class="card">
+        <div class="card-header"><h2>AQI Categories</h2></div>
+        <div class="aqi-scale">
+          <div class="scale-bar">
+            <span class="scale-marker good">0-50 Good</span>
+            <span class="scale-marker moderate">51-100 Moderate</span>
+            <span class="scale-marker unhealthy-sensitive">101-150 USG</span>
+            <span class="scale-marker unhealthy">151-200 Unhealthy</span>
+            <span class="scale-marker very-unhealthy">201-300 Very Unhealthy</span>
+            <span class="scale-marker hazardous">300+ Hazardous</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><h2>Common Pollutants</h2></div>
+        <div class="pollutants-grid">
+          <div class="pollutant-item"><div class="pollutant-name">PM<sub>2.5</sub></div><p class="pollutant-unit">Fine particulate matter; penetrates deep into lungs; major health risk.</p></div>
+          <div class="pollutant-item"><div class="pollutant-name">PM<sub>10</sub></div><p class="pollutant-unit">Coarser particulate; dust and pollen; respiratory irritation.</p></div>
+          <div class="pollutant-item"><div class="pollutant-name">O<sub>3</sub> (Ozone)</div><p class="pollutant-unit">Formed by photochemical reactions; harms lungs and plants.</p></div>
+          <div class="pollutant-item"><div class="pollutant-name">NO<sub>2</sub></div><p class="pollutant-unit">Traffic emission; airway inflammation.</p></div>
+          <div class="pollutant-item"><div class="pollutant-name">SO<sub>2</sub></div><p class="pollutant-unit">From burning sulfur fuels; triggers asthma.</p></div>
+          <div class="pollutant-item"><div class="pollutant-name">CO</div><p class="pollutant-unit">Incomplete combustion; reduces oxygen delivery.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="dashboard-footer">
+      <p>Educational content. Always verify with local authorities.</p>
+    </footer>
+  </div>
+</body>
+</html>

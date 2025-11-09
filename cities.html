@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cities</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="nav.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <header class="dashboard-header">
+      <nav class="top-nav">
+        <a href="index.html" class="brand">AQI Monitor</a>
+        <ul class="nav-links">
+          <li><a href="index.html">Dashboard</a></li>
+          <li><a href="trends.html">Trends</a></li>
+          <li><a href="pollutants.html">Pollutants</a></li>
+          <li><a href="alerts.html">Alerts</a></li>
+          <li><a href="cities.html">Cities</a></li>
+        </ul>
+      </nav>
+  <h1>Cities</h1>
+  <p style="margin-top:8px"><a href="index.html" class="brand" style="text-decoration:underline;">← Back to Dashboard</a></p>
+    </header>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Browse Indian Cities</h2>
+        <input id="citySearch" type="text" placeholder="Search city (e.g., Azamgarh)" style="flex:1;max-width:360px;" />
+      </div>
+      <div id="cityList" class="pollutants-grid"></div>
+    </div>
+
+    <footer class="dashboard-footer">
+      <p>Tip: Clicking a city opens the Dashboard with that city pre-selected.</p>
+    </footer>
+  </div>
+
+  <script src="cities.js"></script>
+</body>
+</html>

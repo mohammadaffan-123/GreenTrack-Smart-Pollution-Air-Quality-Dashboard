@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive air quality map showing AQI levels across regions">
+    <meta name="keywords" content="AQI, air quality, pollution, map, environment">
+    <title>AQI Map - Air Quality Index Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="utils.js"></script>
+    <script src="nav.js" defer></script>
+    <script src="sw-register.js"></script>
+</head>
+<body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <nav class="top-nav" role="navigation" aria-label="Main navigation">
+                <a href="index.html" class="brand" aria-label="AQI Monitor Home">AQI Monitor</a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="trends.html">Trends</a></li>
+                    <li><a href="pollutants.html">Pollutants</a></li>
+                    <li><a href="alerts.html">Alerts</a></li>
+                    <li><a href="cities.html">Cities</a></li>
+                    <li><a href="map.html">Map</a></li>
+                </ul>
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark/light theme" title="Toggle theme">
+                    <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                    <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="display:none" aria-hidden="true"><path d="M6.76 4.84l-1.8-1.79L3.17 4.84l1.79 1.79 1.8-1.79zM1 13h3v-2H1v2zm10 9h2v-3h-2v3zm8.83-3.17l-1.79-1.79-1.8 1.79 1.8 1.79 1.79-1.79zM20 11v2h3v-2h-3zM17.24 4.84l1.79-1.79-1.79-1.79-1.79 1.79 1.79 1.79zM12 5a7 7 0 100 14 7 7 0 000-14zM3.17 19.66l1.79-1.79-1.79-1.79-1.79 1.79 1.79 1.79z"/></svg>
+                </button>
+            </nav>
+            <h1>Air Quality Map</h1>
+            <p class="page-description">Interactive map showing real-time air quality levels across regions</p>
+        </header>
+
+        <!-- Map Controls -->
+        <div class="map-controls">
+            <div class="control-group">
+                <label for="mapLayerSelect">Map Layer:</label>
+                <select id="mapLayerSelect" aria-label="Select map layer">
+                    <option value="aqi">AQI Levels</option>
+                    <option value="pm25">PM2.5</option>
+                    <option value="pm10">PM10</option>
+                    <option value="o3">Ozone</option>
+                    <option value="no2">NO₂</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <button id="locateBtn" class="btn-secondary" aria-label="Find my location">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    My Location
+                </button>
+                <button id="refreshMapBtn" class="btn-primary" aria-label="Refresh map data">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <polyline points="1 20 1 14 7 14"></polyline>
+                        <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+                    </svg>
+                    Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Map Container -->
+        <main id="main-content">
+            <div class="map-container">
+                <div id="map" role="application" aria-label="Interactive air quality map"></div>
+                <div id="mapLoading" class="map-loading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading map data...</p>
+                </div>
+            </div>
+
+            <!-- Map Legend -->
+            <div class="map-legend">
+                <h3>AQI Levels</h3>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--aqi-good);"></div>
+                        <span>Good (0-50)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--aqi-moderate);"></div>
+                        <span>Moderate (51-100)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--aqi-unhealthy-sensitive);"></div>
+                        <span>Unhealthy for Sensitive (101-150)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--aqi-unhealthy);"></div>
+                        <span>Unhealthy (151-200)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--aqi-very-unhealthy);"></div>
+                        <span>Very Unhealthy (201-300)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--aqi-hazardous);"></div>
+                        <span>Hazardous (300+)</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="dashboard-footer">
+            <p>Data provided by World Air Quality Index Project</p>
+            <p class="disclaimer">⚠️ For Educational purposes only.</p>
+        </footer>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <script src="map.js"></script>
+</body>
+</html>

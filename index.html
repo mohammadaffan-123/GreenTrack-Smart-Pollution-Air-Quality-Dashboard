@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GreenTrack — Smart Pollution & Air Quality Dashboard for real-time monitoring with health recommendations and trends">
+    <meta name="keywords" content="GreenTrack, AQI, air quality, pollution, health, environment, smart dashboard">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    <title>GreenTrack — Smart Pollution & Air Quality Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="modern-styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="utils.js"></script>
+    <script src="nav.js" defer></script>
+</head>
+<body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Sticky Navigation -->
+    <nav class="main-nav" id="mainNav" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand" aria-label="GreenTrack Home">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                </svg>
+                <span>Green<span class="brand-accent">Track</span></span>
+            </a>
+            
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Dashboard</a></li>
+                <li><a href="trends.html" class="nav-link">Trends</a></li>
+                <li><a href="pollutants.html" class="nav-link">Pollutants</a></li>
+                <li><a href="alerts.html" class="nav-link">Alerts</a></li>
+                <li><a href="cities.html" class="nav-link">Cities</a></li>
+            </ul>
+            
+            <div class="nav-actions">
+                <button id="themeToggle" class="icon-button" aria-label="Toggle dark/light theme" title="Toggle theme">
+                    <svg id="iconMoon" class="theme-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                    </svg>
+                    <svg id="iconSun" class="theme-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="display:none">
+                        <path d="M12 3v3m0 12v3m9-9h-3M6 12H3m15.364 6.364l-2.121-2.121M8.757 8.757L6.636 6.636m12.728 0l-2.121 2.121M8.757 15.243l-2.121 2.121M12 8a4 4 0 100 8 4 4 0 000-8z"/>
+                    </svg>
+                </button>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle mobile menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <header class="hero-section" id="main-content">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="title-line">GreenTrack</span>
+                    <span class="title-line gradient-text">Smart Pollution Dashboard</span>
+                </h1>
+                <p class="hero-subtitle">Real-time air quality monitoring for 681+ Indian cities</p>
+            </div>
+            
+            <!-- Search & Filter Section -->
+            <div class="search-section">
+                <div class="search-wrapper">
+                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" id="citySearch" class="search-input" placeholder="Search or select 681+ cities..." aria-label="Search cities" autocomplete="off"/>
+                    <button class="dropdown-toggle-btn" id="dropdownToggle" title="Show all cities" aria-label="Toggle city dropdown">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <button class="location-btn" id="useLocation" title="Use my location" aria-label="Detect current location">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Favorite Cities Pills -->
+                <div class="favorites-pills" id="favoritesPills" style="display:none;">
+                    <!-- Dynamically populated -->
+                </div>
+                
+                <!-- Hidden select for city data -->
+                <div style="display: none;">
+                    <select id="citySelect" aria-label="Select a city from the dropdown">
+                        <option value="" disabled>Select a city...</option>
+                        
+                        <!-- Delhi NCR -->
+                        <optgroup label="Delhi NCR">
+                            <option value="Delhi">Delhi</option>
+                            <option value="New Delhi" selected>New Delhi</option>
+                            <option value="Noida">Noida</option>
+                            <option value="Greater Noida">Greater Noida</option>
+                            <option value="Gurgaon">Gurgaon (Gurugram)</option>
+                            <option value="Faridabad">Faridabad</option>
+                            <option value="Ghaziabad">Ghaziabad</option>
+                            <option value="Rohini">Rohini</option>
+                            <option value="Dwarka">Dwarka</option>
+                            <option value="Shahdara">Shahdara</option>
+                            <option value="Najafgarh">Najafgarh</option>
+                            <option value="Narela">Narela</option>
+                            <option value="Janakpuri">Janakpuri</option>
+                            <option value="Vasant Kunj">Vasant Kunj</option>
+                            <option value="Saket">Saket</option>
+                        </optgroup>
+                        
+                        <!-- Maharashtra -->
+                        <optgroup label="Maharashtra">
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Pune">Pune</option>
+                            <option value="Nagpur">Nagpur</option>
+                            <option value="Nashik">Nashik</option>
+                            <option value="Aurangabad">Aurangabad, Maharashtra</option>
+                            <option value="Thane">Thane</option>
+                            <option value="Solapur">Solapur</option>
+                            <option value="Kolhapur">Kolhapur</option>
+                            <option value="Navi Mumbai">Navi Mumbai</option>
+                            <option value="Amravati">Amravati</option>
+                            <option value="Akola">Akola</option>
+                            <option value="Latur">Latur</option>
+                            <option value="Dhule">Dhule</option>
+                            <option value="Ahmednagar">Ahmednagar</option>
+                            <option value="Chandrapur">Chandrapur</option>
+                            <option value="Palghar">Palghar</option>
+                            <option value="Bhiwandi">Bhiwandi</option>
+                            <option value="Jalgaon">Jalgaon</option>
+                            <option value="Sangli">Sangli</option>
+                            <option value="Malegaon">Malegaon</option>
+                            <option value="Kalyan">Kalyan</option>
+                            <option value="Vasai">Vasai-Virar</option>
+                            <option value="Ulhasnagar">Ulhasnagar</option>
+                            <option value="Mira-Bhayandar">Mira-Bhayandar</option>
+                            <option value="Panvel">Panvel</option>
+                            <option value="Wardha">Wardha</option>
+                            <option value="Yavatmal">Yavatmal</option>
+                            <option value="Nanded">Nanded</option>
+                            <option value="Parbhani">Parbhani</option>
+                            <option value="Ichalkaranji">Ichalkaranji</option>
+                            <option value="Jalna">Jalna</option>
+                            <option value="Ambajogai">Ambajogai</option>
+                            <option value="Beed">Beed</option>
+                            <option value="Gondia">Gondia</option>
+                            <option value="Satara">Satara</option>
+                            <option value="Barshi">Barshi</option>
+                            <option value="Osmanabad">Osmanabad</option>
+                            <option value="Ratnagiri">Ratnagiri</option>
+                            <option value="Hingoli">Hingoli</option>
+                            <option value="Hinganghat">Hinganghat</option>
+                        </optgroup>
+                        
+                        <!-- Karnataka -->
+                        <optgroup label="Karnataka">
+                            <option value="Bengaluru">Bengaluru (Bangalore)</option>
+                            <option value="Mysuru">Mysuru (Mysore)</option>
+                            <option value="Mangaluru">Mangaluru (Mangalore)</option>
+                            <option value="Hubballi">Hubballi (Hubli)</option>
+                            <option value="Belagavi">Belagavi (Belgaum)</option>
+                            <option value="Davanagere">Davanagere</option>
+                            <option value="Bellary">Bellary</option>
+                            <option value="Tumkur">Tumkur</option>
+                            <option value="Shimoga">Shimoga (Shivamogga)</option>
+                            <option value="Raichur">Raichur</option>
+                            <option value="Bidar">Bidar</option>
+                            <option value="Hospet">Hospet</option>
+                            <option value="Gadag">Gadag</option>
+                            <option value="Udupi">Udupi</option>
+                            <option value="Kolar">Kolar</option>
+                            <option value="Mandya">Mandya</option>
+                            <option value="Hassan">Hassan</option>
+                            <option value="Chitradurga">Chitradurga</option>
+                            <option value="Bagalkot">Bagalkot</option>
+                            <option value="Dharwad">Dharwad</option>
+                            <option value="Gulbarga">Gulbarga (Kalaburagi)</option>
+                            <option value="Karwar">Karwar</option>
+                            <option value="Ranebennur">Ranebennur</option>
+                            <option value="Bhadravati">Bhadravati</option>
+                            <option value="Bijapur">Bijapur (Vijayapura)</option>
+                            <option value="Yadgir">Yadgir</option>
+                            <option value="Chikmagalur">Chikmagalur</option>
+                            <option value="Robertsonpet">Robertsonpet</option>
+                        </optgroup>
+                        
+                        <!-- Tamil Nadu -->
+                        <optgroup label="Tamil Nadu">
+                            <option value="Chennai">Chennai</option>
+                            <option value="Coimbatore">Coimbatore</option>
+                            <option value="Madurai">Madurai</option>
+                            <option value="Tiruchirappalli">Tiruchirappalli (Trichy)</option>
+                            <option value="Salem">Salem, Tamil Nadu</option>
+                            <option value="Tirunelveli">Tirunelveli</option>
+                            <option value="Vellore">Vellore</option>
+                            <option value="Erode">Erode</option>
+                            <option value="Thanjavur">Thanjavur</option>
+                            <option value="Thoothukudi">Thoothukudi (Tuticorin)</option>
+                            <option value="Nagercoil">Nagercoil</option>
+                            <option value="Dindigul">Dindigul</option>
+                            <option value="Karur">Karur</option>
+                            <option value="Cuddalore">Cuddalore</option>
+                            <option value="Kanchipuram">Kanchipuram</option>
+                            <option value="Kumbakonam">Kumbakonam</option>
+                            <option value="Tiruppur">Tiruppur</option>
+                            <option value="Hosur">Hosur</option>
+                            <option value="Ambur">Ambur</option>
+                            <option value="Pollachi">Pollachi</option>
+                            <option value="Pudukkottai">Pudukkottai</option>
+                            <option value="Rajapalayam">Rajapalayam</option>
+                            <option value="Sivakasi">Sivakasi</option>
+                            <option value="Virudhunagar">Virudhunagar</option>
+                            <option value="Namakkal">Namakkal</option>
+                            <option value="Tindivanam">Tindivanam</option>
+                            <option value="Nagapattinam">Nagapattinam</option>
+                            <option value="Neyveli">Neyveli</option>
+                            <option value="Avadi">Avadi</option>
+                            <option value="Tambaram">Tambaram</option>
+                            <option value="Pallavaram">Pallavaram</option>
+                            <option value="Udhagamandalam">Udhagamandalam (Ooty)</option>
+                            <option value="Arakkonam">Arakkonam</option>
+                        </optgroup>
+                        
+                        <!-- Uttar Pradesh -->
+                        <optgroup label="Uttar Pradesh">
+                            <option value="Lucknow">Lucknow</option>
+                            <option value="Kanpur">Kanpur</option>
+                            <option value="Varanasi">Varanasi</option>
+                            <option value="Agra">Agra</option>
+                            <option value="Allahabad">Allahabad (Prayagraj)</option>
+                            <option value="Meerut">Meerut</option>
+                            <option value="Bareilly">Bareilly</option>
+                            <option value="Aligarh">Aligarh</option>
+                            <option value="Moradabad">Moradabad</option>
+                            <option value="Gorakhpur">Gorakhpur</option>
+                            <option value="Azamgarh">Azamgarh</option>
+                            <option value="Jhansi">Jhansi</option>
+                            <option value="Mathura">Mathura</option>
+                            <option value="Rampur">Rampur</option>
+                            <option value="Shahjahanpur">Shahjahanpur</option>
+                            <option value="Firozabad">Firozabad</option>
+                            <option value="Saharanpur">Saharanpur</option>
+                            <option value="Hapur">Hapur</option>
+                            <option value="Etawah">Etawah</option>
+                            <option value="Mirzapur">Mirzapur</option>
+                            <option value="Bulandshahr">Bulandshahr</option>
+                            <option value="Sambhal">Sambhal</option>
+                            <option value="Amroha">Amroha</option>
+                            <option value="Hardoi">Hardoi</option>
+                            <option value="Fatehpur">Fatehpur</option>
+                            <option value="Raebareli">Raebareli</option>
+                            <option value="Orai">Orai</option>
+                            <option value="Sitapur">Sitapur</option>
+                            <option value="Bahraich">Bahraich</option>
+                            <option value="Unnao">Unnao</option>
+                            <option value="Rae Bareli">Rae Bareli</option>
+                            <option value="Lakhimpur">Lakhimpur</option>
+                            <option value="Banda">Banda</option>
+                            <option value="Pilibhit">Pilibhit</option>
+                            <option value="Barabanki">Barabanki</option>
+                            <option value="Khurja">Khurja</option>
+                            <option value="Gonda">Gonda</option>
+                            <option value="Mainpuri">Mainpuri</option>
+                            <option value="Lalitpur">Lalitpur</option>
+                            <option value="Etah">Etah</option>
+                            <option value="Deoria">Deoria</option>
+                            <option value="Badaun">Badaun</option>
+                            <option value="Budaun">Budaun</option>
+                            <option value="Muzaffarnagar">Muzaffarnagar</option>
+                            <option value="Bijnor">Bijnor</option>
+                        </optgroup>
+                        
+                        <!-- Gujarat -->
+                        <optgroup label="Gujarat">
+                            <option value="Ahmedabad">Ahmedabad</option>
+                            <option value="Surat">Surat</option>
+                            <option value="Vadodara">Vadodara</option>
+                            <option value="Rajkot">Rajkot</option>
+                            <option value="Bhavnagar">Bhavnagar</option>
+                            <option value="Jamnagar">Jamnagar</option>
+                            <option value="Gandhinagar">Gandhinagar</option>
+                            <option value="Junagadh">Junagadh</option>
+                            <option value="Anand">Anand</option>
+                            <option value="Nadiad">Nadiad</option>
+                            <option value="Morbi">Morbi</option>
+                            <option value="Surendranagar">Surendranagar</option>
+                            <option value="Bharuch">Bharuch</option>
+                            <option value="Vapi">Vapi</option>
+                            <option value="Navsari">Navsari</option>
+                            <option value="Veraval">Veraval</option>
+                            <option value="Porbandar">Porbandar</option>
+                            <option value="Godhra">Godhra</option>
+                            <option value="Bhuj">Bhuj</option>
+                            <option value="Ankleshwar">Ankleshwar</option>
+                            <option value="Mehsana">Mehsana</option>
+                            <option value="Patan">Patan</option>
+                            <option value="Palanpur">Palanpur</option>
+                            <option value="Botad">Botad</option>
+                            <option value="Amreli">Amreli</option>
+                            <option value="Deesa">Deesa</option>
+                            <option value="Jetpur">Jetpur</option>
+                        </optgroup>
+                        
+                        <!-- West Bengal -->
+                        <optgroup label="West Bengal">
+                            <option value="Kolkata">Kolkata</option>
+                            <option value="Howrah">Howrah</option>
+                            <option value="Durgapur">Durgapur</option>
+                            <option value="Asansol">Asansol</option>
+                            <option value="Siliguri">Siliguri</option>
+                            <option value="Kharagpur">Kharagpur</option>
+                            <option value="Bardhaman">Bardhaman (Burdwan)</option>
+                            <option value="Malda">Malda</option>
+                            <option value="Baharampur">Baharampur</option>
+                            <option value="Habra">Habra</option>
+                            <option value="Kalyani">Kalyani</option>
+                            <option value="Raiganj">Raiganj</option>
+                            <option value="Haldia">Haldia</option>
+                            <option value="Krishnanagar">Krishnanagar</option>
+                            <option value="Bankura">Bankura</option>
+                            <option value="Jalpaiguri">Jalpaiguri</option>
+                            <option value="Purulia">Purulia</option>
+                            <option value="Medinipur">Medinipur</option>
+                            <option value="Darjeeling">Darjeeling</option>
+                            <option value="Alipurduar">Alipurduar</option>
+                            <option value="Balurghat">Balurghat</option>
+                            <option value="Basirhat">Basirhat</option>
+                            <option value="Chandannagar">Chandannagar</option>
+                        </optgroup>
+                        
+                        <!-- Rajasthan -->
+                        <optgroup label="Rajasthan">
+                            <option value="Jaipur">Jaipur</option>
+                            <option value="Jodhpur">Jodhpur</option>
+                            <option value="Udaipur">Udaipur</option>
+                            <option value="Kota">Kota</option>
+                            <option value="Ajmer">Ajmer</option>
+                            <option value="Bikaner">Bikaner</option>
+                            <option value="Alwar">Alwar</option>
+                            <option value="Bharatpur">Bharatpur</option>
+                            <option value="Sikar">Sikar</option>
+                            <option value="Bhilwara">Bhilwara</option>
+                            <option value="Pali">Pali</option>
+                            <option value="Tonk">Tonk</option>
+                            <option value="Kishangarh">Kishangarh</option>
+                            <option value="Beawar">Beawar</option>
+                            <option value="Hanumangarh">Hanumangarh</option>
+                            <option value="Sri Ganganagar">Sri Ganganagar</option>
+                            <option value="Jhunjhunu">Jhunjhunu</option>
+                            <option value="Churu">Churu</option>
+                            <option value="Banswara">Banswara</option>
+                            <option value="Bundi">Bundi</option>
+                            <option value="Chittorgarh">Chittorgarh</option>
+                            <option value="Dungarpur">Dungarpur</option>
+                            <option value="Jaisalmer">Jaisalmer</option>
+                            <option value="Jhalawar">Jhalawar</option>
+                            <option value="Nagaur">Nagaur</option>
+                            <option value="Sawai Madhopur">Sawai Madhopur</option>
+                        </optgroup>
+                        
+                        <!-- Telangana -->
+                        <optgroup label="Telangana">
+                            <option value="Hyderabad">Hyderabad</option>
+                            <option value="Warangal">Warangal</option>
+                            <option value="Nizamabad">Nizamabad</option>
+                            <option value="Karimnagar">Karimnagar</option>
+                            <option value="Khammam">Khammam</option>
+                            <option value="Mahbubnagar">Mahbubnagar</option>
+                            <option value="Nalgonda">Nalgonda</option>
+                            <option value="Adilabad">Adilabad</option>
+                            <option value="Suryapet">Suryapet</option>
+                            <option value="Miryalaguda">Miryalaguda</option>
+                            <option value="Ramagundam">Ramagundam</option>
+                            <option value="Secunderabad">Secunderabad</option>
+                            <option value="Jagtial">Jagtial</option>
+                            <option value="Mancherial">Mancherial</option>
+                            <option value="Nirmal">Nirmal</option>
+                            <option value="Kamareddy">Kamareddy</option>
+                            <option value="Siddipet">Siddipet</option>
+                            <option value="Bhongir">Bhongir</option>
+                            <option value="Sangareddy">Sangareddy</option>
+                            <option value="Medak">Medak</option>
+                            <option value="Vikarabad">Vikarabad</option>
+                            <option value="Jangaon">Jangaon</option>
+                            <option value="Wanaparthy">Wanaparthy</option>
+                        </optgroup>
+                        
+                        <!-- Andhra Pradesh -->
+                        <optgroup label="Andhra Pradesh">
+                            <option value="Visakhapatnam">Visakhapatnam</option>
+                            <option value="Vijayawada">Vijayawada</option>
+                            <option value="Guntur">Guntur</option>
+                            <option value="Nellore">Nellore</option>
+                            <option value="Tirupati">Tirupati</option>
+                            <option value="Rajahmundry">Rajahmundry</option>
+                            <option value="Kakinada">Kakinada</option>
+                            <option value="Kurnool">Kurnool</option>
+                            <option value="Anantapur">Anantapur</option>
+                            <option value="Eluru">Eluru</option>
+                            <option value="Ongole">Ongole</option>
+                            <option value="Kadapa">Kadapa</option>
+                            <option value="Chittoor">Chittoor</option>
+                            <option value="Vizianagaram">Vizianagaram</option>
+                            <option value="Machilipatnam">Machilipatnam</option>
+                            <option value="Srikakulam">Srikakulam</option>
+                            <option value="Adoni">Adoni</option>
+                            <option value="Tenali">Tenali</option>
+                            <option value="Proddatur">Proddatur</option>
+                            <option value="Nandyal">Nandyal</option>
+                            <option value="Hindupur">Hindupur</option>
+                            <option value="Bhimavaram">Bhimavaram</option>
+                            <option value="Madanapalle">Madanapalle</option>
+                            <option value="Guntakal">Guntakal</option>
+                            <option value="Dharmavaram">Dharmavaram</option>
+                            <option value="Gudivada">Gudivada</option>
+                            <option value="Narasaraopet">Narasaraopet</option>
+                            <option value="Tadepalligudem">Tadepalligudem</option>
+                            <option value="Tadipatri">Tadipatri</option>
+                            <option value="Chilakaluripet">Chilakaluripet</option>
+                        </optgroup>
+                        
+                        <!-- Kerala -->
+                        <optgroup label="Kerala">
+                            <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                            <option value="Kochi">Kochi</option>
+                            <option value="Kozhikode">Kozhikode (Calicut)</option>
+                            <option value="Thrissur">Thrissur</option>
+                            <option value="Kollam">Kollam</option>
+                            <option value="Kannur">Kannur</option>
+                            <option value="Alappuzha">Alappuzha (Alleppey)</option>
+                            <option value="Palakkad">Palakkad</option>
+                            <option value="Malappuram">Malappuram</option>
+                            <option value="Kottayam">Kottayam</option>
+                            <option value="Pathanamthitta">Pathanamthitta</option>
+                            <option value="Idukki">Idukki</option>
+                            <option value="Kasaragod">Kasaragod</option>
+                            <option value="Wayanad">Wayanad</option>
+                            <option value="Ernakulam">Ernakulam</option>
+                            <option value="Thalassery">Thalassery</option>
+                            <option value="Ponnani">Ponnani</option>
+                            <option value="Vatakara">Vatakara</option>
+                            <option value="Kanhangad">Kanhangad</option>
+                            <option value="Payyanur">Payyanur</option>
+                            <option value="Koyilandy">Koyilandy</option>
+                            <option value="Mattannur">Mattannur</option>
+                            <option value="Punalur">Punalur</option>
+                            <option value="Nilambur">Nilambur</option>
+                            <option value="Cherthala">Cherthala</option>
+                            <option value="Changanassery">Changanassery</option>
+                            <option value="Tirur">Tirur</option>
+                            <option value="Kodungallur">Kodungallur</option>
+                            <option value="Neyyattinkara">Neyyattinkara</option>
+                            <option value="Kayamkulam">Kayamkulam</option>
+                        </optgroup>
+                        
+                        <!-- Punjab -->
+                        <optgroup label="Punjab">
+                            <option value="Ludhiana">Ludhiana</option>
+                            <option value="Amritsar">Amritsar</option>
+                            <option value="Jalandhar">Jalandhar</option>
+                            <option value="Patiala">Patiala</option>
+                            <option value="Bathinda">Bathinda</option>
+                            <option value="Mohali">Mohali</option>
+                            <option value="Hoshiarpur">Hoshiarpur</option>
+                            <option value="Pathankot">Pathankot</option>
+                            <option value="Moga">Moga</option>
+                            <option value="Abohar">Abohar</option>
+                            <option value="Malerkotla">Malerkotla</option>
+                            <option value="Khanna">Khanna</option>
+                            <option value="Phagwara">Phagwara</option>
+                            <option value="Muktsar">Muktsar</option>
+                            <option value="Barnala">Barnala</option>
+                            <option value="Firozpur">Firozpur</option>
+                            <option value="Kapurthala">Kapurthala</option>
+                            <option value="Faridkot">Faridkot</option>
+                            <option value="Rajpura">Rajpura</option>
+                            <option value="Sangrur">Sangrur</option>
+                            <option value="Fazilka">Fazilka</option>
+                            <option value="Gurdaspur">Gurdaspur</option>
+                            <option value="Kharar">Kharar</option>
+                            <option value="Gobindgarh">Gobindgarh</option>
+                            <option value="Mansa">Mansa</option>
+                            <option value="Malout">Malout</option>
+                            <option value="Nabha">Nabha</option>
+                            <option value="Tarn Taran">Tarn Taran</option>
+                            <option value="Jagraon">Jagraon</option>
+                            <option value="Sunam">Sunam</option>
+                        </optgroup>
+                        
+                        <!-- Haryana -->
+                        <optgroup label="Haryana">
+                            <option value="Chandigarh">Chandigarh</option>
+                            <option value="Faridabad">Faridabad</option>
+                            <option value="Gurgaon">Gurgaon (Gurugram)</option>
+                            <option value="Panipat">Panipat</option>
+                            <option value="Ambala">Ambala</option>
+                            <option value="Karnal">Karnal</option>
+                            <option value="Rohtak">Rohtak</option>
+                            <option value="Hisar">Hisar</option>
+                            <option value="Sonipat">Sonipat</option>
+                            <option value="Panchkula">Panchkula</option>
+                            <option value="Yamunanagar">Yamunanagar</option>
+                            <option value="Bhiwani">Bhiwani</option>
+                            <option value="Sirsa">Sirsa</option>
+                            <option value="Bahadurgarh">Bahadurgarh</option>
+                            <option value="Jind">Jind</option>
+                            <option value="Thanesar">Thanesar</option>
+                            <option value="Kaithal">Kaithal</option>
+                            <option value="Rewari">Rewari</option>
+                            <option value="Palwal">Palwal</option>
+                            <option value="Hansi">Hansi</option>
+                            <option value="Narnaul">Narnaul</option>
+                            <option value="Fatehabad">Fatehabad</option>
+                            <option value="Gohana">Gohana</option>
+                            <option value="Tohana">Tohana</option>
+                            <option value="Narwana">Narwana</option>
+                        </optgroup>
+                        
+                        <!-- Madhya Pradesh -->
+                        <optgroup label="Madhya Pradesh">
+                            <option value="Indore">Indore</option>
+                            <option value="Bhopal">Bhopal</option>
+                            <option value="Jabalpur">Jabalpur</option>
+                            <option value="Gwalior">Gwalior</option>
+                            <option value="Ujjain">Ujjain</option>
+                            <option value="Sagar">Sagar</option>
+                            <option value="Dewas">Dewas</option>
+                            <option value="Satna">Satna</option>
+                            <option value="Ratlam">Ratlam</option>
+                            <option value="Rewa">Rewa</option>
+                            <option value="Katni">Katni</option>
+                            <option value="Singrauli">Singrauli</option>
+                            <option value="Burhanpur">Burhanpur</option>
+                            <option value="Khandwa">Khandwa</option>
+                            <option value="Morena">Morena</option>
+                            <option value="Bhind">Bhind</option>
+                            <option value="Chhindwara">Chhindwara</option>
+                            <option value="Guna">Guna</option>
+                            <option value="Shivpuri">Shivpuri</option>
+                            <option value="Vidisha">Vidisha</option>
+                            <option value="Damoh">Damoh</option>
+                            <option value="Mandsaur">Mandsaur</option>
+                            <option value="Khargone">Khargone</option>
+                            <option value="Neemuch">Neemuch</option>
+                            <option value="Pithampur">Pithampur</option>
+                            <option value="Hoshangabad">Hoshangabad</option>
+                            <option value="Seoni">Seoni</option>
+                            <option value="Shahdol">Shahdol</option>
+                            <option value="Betul">Betul</option>
+                            <option value="Dhar">Dhar</option>
+                            <option value="Sehore">Sehore</option>
+                            <option value="Balaghat">Balaghat</option>
+                        </optgroup>
+                        
+                        <!-- Bihar -->
+                        <optgroup label="Bihar">
+                            <option value="Patna">Patna</option>
+                            <option value="Gaya">Gaya</option>
+                            <option value="Bhagalpur">Bhagalpur</option>
+                            <option value="Muzaffarpur">Muzaffarpur</option>
+                            <option value="Darbhanga">Darbhanga</option>
+                            <option value="Purnia">Purnia</option>
+                            <option value="Arrah">Arrah</option>
+                            <option value="Begusarai">Begusarai</option>
+                            <option value="Katihar">Katihar</option>
+                            <option value="Munger">Munger</option>
+                            <option value="Chhapra">Chhapra</option>
+                            <option value="Danapur">Danapur</option>
+                            <option value="Bettiah">Bettiah</option>
+                            <option value="Saharsa">Saharsa</option>
+                            <option value="Hajipur">Hajipur</option>
+                            <option value="Sasaram">Sasaram</option>
+                            <option value="Dehri">Dehri</option>
+                            <option value="Siwan">Siwan</option>
+                            <option value="Motihari">Motihari</option>
+                            <option value="Nawada">Nawada</option>
+                            <option value="Bagaha">Bagaha</option>
+                            <option value="Buxar">Buxar</option>
+                            <option value="Kishanganj">Kishanganj</option>
+                            <option value="Sitamarhi">Sitamarhi</option>
+                            <option value="Jamalpur">Jamalpur</option>
+                            <option value="Jehanabad">Jehanabad</option>
+                            <option value="Aurangabad">Aurangabad, Bihar</option>
+                            <option value="Madhubani">Madhubani</option>
+                            <option value="Bhabua">Bhabua</option>
+                            <option value="Samastipur">Samastipur</option>
+                        </optgroup>
+                        
+                        <!-- Odisha -->
+                        <optgroup label="Odisha">
+                            <option value="Bhubaneswar">Bhubaneswar</option>
+                            <option value="Cuttack">Cuttack</option>
+                            <option value="Rourkela">Rourkela</option>
+                            <option value="Brahmapur">Brahmapur</option>
+                            <option value="Sambalpur">Sambalpur</option>
+                            <option value="Puri">Puri</option>
+                            <option value="Balasore">Balasore</option>
+                            <option value="Baripada">Baripada</option>
+                            <option value="Bhadrak">Bhadrak</option>
+                            <option value="Jharsuguda">Jharsuguda</option>
+                            <option value="Jeypore">Jeypore</option>
+                            <option value="Bargarh">Bargarh</option>
+                            <option value="Kendujhar">Kendujhar</option>
+                            <option value="Sunabeda">Sunabeda</option>
+                            <option value="Rayagada">Rayagada</option>
+                            <option value="Paradip">Paradip</option>
+                            <option value="Angul">Angul</option>
+                            <option value="Talcher">Talcher</option>
+                            <option value="Bhawanipatna">Bhawanipatna</option>
+                            <option value="Balangir">Balangir</option>
+                            <option value="Titlagarh">Titlagarh</option>
+                            <option value="Nabarangpur">Nabarangpur</option>
+                            <option value="Jajpur">Jajpur</option>
+                            <option value="Dhenkanal">Dhenkanal</option>
+                        </optgroup>
+                        
+                        <!-- Assam -->
+                        <optgroup label="Assam">
+                            <option value="Guwahati">Guwahati</option>
+                            <option value="Dibrugarh">Dibrugarh</option>
+                            <option value="Jorhat">Jorhat</option>
+                            <option value="Silchar">Silchar</option>
+                            <option value="Nagaon">Nagaon</option>
+                            <option value="Tezpur">Tezpur</option>
+                            <option value="Tinsukia">Tinsukia</option>
+                            <option value="Bongaigaon">Bongaigaon</option>
+                            <option value="Diphu">Diphu</option>
+                            <option value="Dhubri">Dhubri</option>
+                            <option value="Goalpara">Goalpara</option>
+                            <option value="Barpeta">Barpeta</option>
+                            <option value="Golaghat">Golaghat</option>
+                            <option value="Sivasagar">Sivasagar</option>
+                            <option value="Hojai">Hojai</option>
+                            <option value="North Lakhimpur">North Lakhimpur</option>
+                            <option value="Karimganj">Karimganj</option>
+                            <option value="Haflong">Haflong</option>
+                            <option value="Mangaldoi">Mangaldoi</option>
+                            <option value="Nalbari">Nalbari</option>
+                            <option value="Kokrajhar">Kokrajhar</option>
+                        </optgroup>
+                        
+                        <!-- Jharkhand -->
+                        <optgroup label="Jharkhand">
+                            <option value="Ranchi">Ranchi</option>
+                            <option value="Jamshedpur">Jamshedpur</option>
+                            <option value="Dhanbad">Dhanbad</option>
+                            <option value="Bokaro">Bokaro</option>
+                            <option value="Deoghar">Deoghar</option>
+                            <option value="Phusro">Phusro</option>
+                            <option value="Hazaribagh">Hazaribagh</option>
+                            <option value="Giridih">Giridih</option>
+                            <option value="Ramgarh">Ramgarh</option>
+                            <option value="Medininagar">Medininagar</option>
+                            <option value="Chaibasa">Chaibasa</option>
+                            <option value="Chirkunda">Chirkunda</option>
+                            <option value="Dumka">Dumka</option>
+                            <option value="Sahibganj">Sahibganj</option>
+                            <option value="Pakur">Pakur</option>
+                            <option value="Gumla">Gumla</option>
+                            <option value="Mihijam">Mihijam</option>
+                            <option value="Jhumri Tilaiya">Jhumri Tilaiya</option>
+                            <option value="Chatra">Chatra</option>
+                            <option value="Koderma">Koderma</option>
+                            <option value="Lohardaga">Lohardaga</option>
+                            <option value="Daltonganj">Daltonganj</option>
+                        </optgroup>
+                        
+                        <!-- Chhattisgarh -->
+                        <optgroup label="Chhattisgarh">
+                            <option value="Raipur">Raipur</option>
+                            <option value="Bhilai">Bhilai</option>
+                            <option value="Bilaspur">Bilaspur, Chhattisgarh</option>
+                            <option value="Korba">Korba</option>
+                            <option value="Durg">Durg</option>
+                            <option value="Rajnandgaon">Rajnandgaon</option>
+                            <option value="Jagdalpur">Jagdalpur</option>
+                            <option value="Raigarh">Raigarh</option>
+                            <option value="Ambikapur">Ambikapur</option>
+                            <option value="Mahasamund">Mahasamund</option>
+                            <option value="Dhamtari">Dhamtari</option>
+                            <option value="Chirmiri">Chirmiri</option>
+                            <option value="Bhatapara">Bhatapara</option>
+                            <option value="Dalli-Rajhara">Dalli-Rajhara</option>
+                            <option value="Naila Janjgir">Naila Janjgir</option>
+                            <option value="Tilda Newra">Tilda Newra</option>
+                            <option value="Mungeli">Mungeli</option>
+                            <option value="Manendragarh">Manendragarh</option>
+                            <option value="Sakti">Sakti</option>
+                        </optgroup>
+                        
+                        <!-- Uttarakhand -->
+                        <optgroup label="Uttarakhand">
+                            <option value="Dehradun">Dehradun</option>
+                            <option value="Haridwar">Haridwar</option>
+                            <option value="Roorkee">Roorkee</option>
+                            <option value="Haldwani">Haldwani</option>
+                            <option value="Rudrapur">Rudrapur</option>
+                            <option value="Kashipur">Kashipur</option>
+                            <option value="Rishikesh">Rishikesh</option>
+                            <option value="Nainital">Nainital</option>
+                            <option value="Pithoragarh">Pithoragarh</option>
+                            <option value="Almora">Almora</option>
+                            <option value="Tehri">Tehri</option>
+                            <option value="Mussoorie">Mussoorie</option>
+                            <option value="Pauri">Pauri</option>
+                            <option value="Ranikhet">Ranikhet</option>
+                            <option value="Kotdwar">Kotdwar</option>
+                            <option value="Jaspur">Jaspur</option>
+                            <option value="Sitarganj">Sitarganj</option>
+                            <option value="Kichha">Kichha</option>
+                            <option value="Manglaur">Manglaur</option>
+                            <option value="Tanakpur">Tanakpur</option>
+                        </optgroup>
+                        
+                        <!-- Himachal Pradesh -->
+                        <optgroup label="Himachal Pradesh">
+                            <option value="Shimla">Shimla</option>
+                            <option value="Dharamshala">Dharamshala</option>
+                            <option value="Solan">Solan</option>
+                            <option value="Mandi">Mandi</option>
+                            <option value="Kullu">Kullu</option>
+                            <option value="Manali">Manali</option>
+                            <option value="Hamirpur">Hamirpur</option>
+                            <option value="Bilaspur">Bilaspur, Himachal Pradesh</option>
+                            <option value="Palampur">Palampur</option>
+                            <option value="Chamba">Chamba</option>
+                            <option value="Una">Una</option>
+                            <option value="Nahan">Nahan</option>
+                            <option value="Sundarnagar">Sundarnagar</option>
+                            <option value="Kangra">Kangra</option>
+                            <option value="Baddi">Baddi</option>
+                            <option value="Parwanoo">Parwanoo</option>
+                            <option value="Dalhousie">Dalhousie</option>
+                            <option value="Kinnaur">Kinnaur</option>
+                            <option value="Keylong">Keylong</option>
+                        </optgroup>
+                        
+                        <!-- Jammu & Kashmir -->
+                        <optgroup label="Jammu & Kashmir">
+                            <option value="Srinagar">Srinagar</option>
+                            <option value="Jammu">Jammu</option>
+                            <option value="Anantnag">Anantnag</option>
+                            <option value="Baramulla">Baramulla</option>
+                            <option value="Udhampur">Udhampur</option>
+                            <option value="Kathua">Kathua</option>
+                            <option value="Sopore">Sopore</option>
+                            <option value="Pulwama">Pulwama</option>
+                            <option value="Budgam">Budgam</option>
+                            <option value="Rajouri">Rajouri</option>
+                            <option value="Poonch">Poonch</option>
+                            <option value="Ganderbal">Ganderbal</option>
+                            <option value="Kupwara">Kupwara</option>
+                            <option value="Bandipora">Bandipora</option>
+                            <option value="Kulgam">Kulgam</option>
+                            <option value="Shopian">Shopian</option>
+                            <option value="Samba">Samba</option>
+                            <option value="Reasi">Reasi</option>
+                            <option value="Kishtwar">Kishtwar</option>
+                            <option value="Doda">Doda</option>
+                            <option value="Ramban">Ramban</option>
+                        </optgroup>
+                        
+                        <!-- Goa -->
+                        <optgroup label="Goa">
+                            <option value="Panaji">Panaji</option>
+                            <option value="Margao">Margao</option>
+                            <option value="Vasco da Gama">Vasco da Gama</option>
+                            <option value="Mapusa">Mapusa</option>
+                            <option value="Ponda">Ponda</option>
+                            <option value="Bicholim">Bicholim</option>
+                            <option value="Curchorem">Curchorem</option>
+                            <option value="Sanquelim">Sanquelim</option>
+                            <option value="Quepem">Quepem</option>
+                            <option value="Pernem">Pernem</option>
+                            <option value="Cuncolim">Cuncolim</option>
+                            <option value="Canacona">Canacona</option>
+                        </optgroup>
+                        
+                        <!-- Puducherry -->
+                        <optgroup label="Puducherry (UT)">
+                            <option value="Puducherry">Puducherry</option>
+                            <option value="Karaikal">Karaikal</option>
+                            <option value="Yanam">Yanam</option>
+                            <option value="Mahe">Mahe</option>
+                            <option value="Ozhukarai">Ozhukarai</option>
+                        </optgroup>
+                        
+                        <!-- Tripura -->
+                        <optgroup label="Tripura">
+                            <option value="Agartala">Agartala</option>
+                            <option value="Udaipur">Udaipur, Tripura</option>
+                            <option value="Dharmanagar">Dharmanagar</option>
+                            <option value="Kailasahar">Kailasahar</option>
+                            <option value="Ambassa">Ambassa</option>
+                            <option value="Belonia">Belonia</option>
+                            <option value="Khowai">Khowai</option>
+                            <option value="Teliamura">Teliamura</option>
+                            <option value="Kamalpur">Kamalpur</option>
+                            <option value="Sabroom">Sabroom</option>
+                        </optgroup>
+                        
+                        <!-- Meghalaya -->
+                        <optgroup label="Meghalaya">
+                            <option value="Shillong">Shillong</option>
+                            <option value="Tura">Tura</option>
+                            <option value="Nongstoin">Nongstoin</option>
+                            <option value="Jowai">Jowai</option>
+                            <option value="Baghmara">Baghmara</option>
+                            <option value="Williamnagar">Williamnagar</option>
+                            <option value="Nongpoh">Nongpoh</option>
+                            <option value="Mairang">Mairang</option>
+                        </optgroup>
+                        
+                        <!-- Manipur -->
+                        <optgroup label="Manipur">
+                            <option value="Imphal">Imphal</option>
+                            <option value="Thoubal">Thoubal</option>
+                            <option value="Bishnupur">Bishnupur</option>
+                            <option value="Churachandpur">Churachandpur</option>
+                            <option value="Kakching">Kakching</option>
+                            <option value="Ukhrul">Ukhrul</option>
+                            <option value="Senapati">Senapati</option>
+                            <option value="Tamenglong">Tamenglong</option>
+                            <option value="Jiribam">Jiribam</option>
+                            <option value="Moirang">Moirang</option>
+                        </optgroup>
+                        
+                        <!-- Nagaland -->
+                        <optgroup label="Nagaland">
+                            <option value="Kohima">Kohima</option>
+                            <option value="Dimapur">Dimapur</option>
+                            <option value="Mokokchung">Mokokchung</option>
+                            <option value="Tuensang">Tuensang</option>
+                            <option value="Wokha">Wokha</option>
+                            <option value="Zunheboto">Zunheboto</option>
+                            <option value="Mon">Mon</option>
+                            <option value="Phek">Phek</option>
+                        </optgroup>
+                        
+                        <!-- Mizoram -->
+                        <optgroup label="Mizoram">
+                            <option value="Aizawl">Aizawl</option>
+                            <option value="Lunglei">Lunglei</option>
+                            <option value="Champhai">Champhai</option>
+                            <option value="Serchhip">Serchhip</option>
+                            <option value="Kolasib">Kolasib</option>
+                            <option value="Lawngtlai">Lawngtlai</option>
+                            <option value="Saiha">Saiha</option>
+                            <option value="Mamit">Mamit</option>
+                        </optgroup>
+                        
+                        <!-- Arunachal Pradesh -->
+                        <optgroup label="Arunachal Pradesh">
+                            <option value="Itanagar">Itanagar</option>
+                            <option value="Naharlagun">Naharlagun</option>
+                            <option value="Pasighat">Pasighat</option>
+                            <option value="Tawang">Tawang</option>
+                            <option value="Ziro">Ziro</option>
+                            <option value="Bomdila">Bomdila</option>
+                            <option value="Tezu">Tezu</option>
+                            <option value="Seppa">Seppa</option>
+                            <option value="Along">Along</option>
+                            <option value="Roing">Roing</option>
+                            <option value="Anini">Anini</option>
+                            <option value="Daporijo">Daporijo</option>
+                            <option value="Changlang">Changlang</option>
+                        </optgroup>
+                        
+                        <!-- Sikkim -->
+                        <optgroup label="Sikkim">
+                            <option value="Gangtok">Gangtok</option>
+                            <option value="Namchi">Namchi</option>
+                            <option value="Gyalshing">Gyalshing</option>
+                            <option value="Mangan">Mangan</option>
+                            <option value="Rangpo">Rangpo</option>
+                            <option value="Jorethang">Jorethang</option>
+                            <option value="Singtam">Singtam</option>
+                            <option value="Ravangla">Ravangla</option>
+                        </optgroup>
+                        
+                        <!-- Ladakh -->
+                        <optgroup label="Ladakh (UT)">
+                            <option value="Leh">Leh</option>
+                            <option value="Kargil">Kargil</option>
+                        </optgroup>
+                        
+                        <!-- Andaman & Nicobar -->
+                        <optgroup label="Andaman & Nicobar (UT)">
+                            <option value="Port Blair">Port Blair</option>
+                        </optgroup>
+                        
+                        <!-- Dadra & Nagar Haveli -->
+                        <optgroup label="Dadra & Nagar Haveli and Daman & Diu (UT)">
+                            <option value="Daman">Daman</option>
+                            <option value="Diu">Diu</option>
+                            <option value="Silvassa">Silvassa</option>
+                        </optgroup>
+                        
+                        <!-- Lakshadweep -->
+                        <optgroup label="Lakshadweep (UT)">
+                            <option value="Kavaratti">Kavaratti</option>
+                        </optgroup>
+                        
+                        <!-- Other International -->
+                        <optgroup label="International Cities">
+                            <option value="Shanghai">Shanghai, China</option>
+                            <option value="Beijing">Beijing, China</option>
+                            <option value="London">London, UK</option>
+                            <option value="Paris">Paris, France</option>
+                            <option value="New York">New York, USA</option>
+                            <option value="Los Angeles">Los Angeles, USA</option>
+                            <option value="Tokyo">Tokyo, Japan</option>
+                            <option value="Seoul">Seoul, South Korea</option>
+                            <option value="Singapore">Singapore</option>
+                            <option value="Dubai">Dubai, UAE</option>
+                        </optgroup>
+                        
+                        <option value="custom">Custom City...</option>
+                    </select>
+                    <input type="text" id="cityInput" placeholder="Enter city name..." style="display: none;" aria-label="Enter custom city name">
+                    <button id="fetchBtn" class="primary-btn" aria-label="Update air quality data for selected city">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                        </svg>
+                        <span>Update</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Current Location Display -->
+            <div class="location-display" id="locationDisplay">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                <span id="location" role="status" aria-live="polite">New Delhi, India</span>
+            </div>
+        </header>
+
+        <!-- Alert Banner (Initially Hidden) -->
+        <div class="alert-banner" id="alertBanner" role="alert" aria-live="assertive">
+            <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <div class="alert-content">
+                <strong>Dangerous Air Quality Alert!</strong>
+                <p>Air quality has reached hazardous levels. Limit outdoor activities and use air filtration.</p>
+            </div>
+        </div>
+
+        <!-- Alert Banner (Initially Hidden) -->
+        <div class="alert-banner" id="alertBanner" role="alert" aria-live="assertive" style="display:none;">
+            <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <div class="alert-content">
+                <strong id="alertTitle">Air Quality Alert!</strong>
+                <p id="alertMessage">Monitor conditions closely.</p>
+            </div>
+            <button class="alert-close" onclick="document.getElementById('alertBanner').style.display='none'">×</button>
+        </div>
+
+        <!-- Main Dashboard Grid -->
+        <main class="main-content">
+            <!-- Hero AQI Card -->
+            <section class="hero-aqi-section">
+                <div class="hero-aqi-card animated-card" id="aqiCard" role="region" aria-labelledby="aqi-heading">
+                    <div class="card-glow"></div>
+                    
+                    <div class="hero-aqi-header">
+                        <div>
+                            <h2 id="aqi-heading">Air Quality Index</h2>
+                            <div class="data-info-row">
+                                <p class="update-time" id="updateTime" aria-live="polite">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                                    </svg>
+                                    <span>Loading...</span>
+                                </p>
+                                <span class="data-source-indicator" id="dataSourceIndicator">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                                        <circle cx="12" cy="12" r="10"/>
+                                    </svg>
+                                    <span>Connecting...</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="hero-actions">
+                            <button id="shareBtn" class="icon-button" aria-label="Share" title="Share">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                                </svg>
+                            </button>
+                            <button id="favoriteBtn" class="icon-button" aria-label="Favorite" title="Add to favorites">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="hero-aqi-display">
+                        <div class="aqi-value-container">
+                            <div class="aqi-value" id="aqiValue" aria-live="polite" aria-atomic="true">000</div>
+                            <div class="aqi-label" id="aqiLabel" aria-live="polite">Loading...</div>
+                        </div>
+                        
+                        <div class="aqi-ring" id="aqiRing">
+                            <svg viewBox="0 0 200 200">
+                                <circle cx="100" cy="100" r="90" class="ring-bg"/>
+                                <circle cx="100" cy="100" r="90" class="ring-progress" id="ringProgress"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="health-impact" id="healthImpact">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <span>Loading health impact...</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Weather & Stats Cards -->
+            <div class="stats-grid">
+                <!-- Temperature Card -->
+                <div class="stat-card animated-card" style="animation-delay: 0.1s">
+                    <div class="stat-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Temperature</div>
+                        <div class="stat-value" id="tempValue">--°C</div>
+                    </div>
+                </div>
+
+                <!-- Humidity Card -->
+                <div class="stat-card animated-card" style="animation-delay: 0.2s">
+                    <div class="stat-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Humidity</div>
+                        <div class="stat-value" id="humidityValue">--%</div>
+                    </div>
+                </div>
+
+                <!-- Wind Speed Card -->
+                <div class="stat-card animated-card" style="animation-delay: 0.3s">
+                    <div class="stat-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Wind Speed</div>
+                        <div class="stat-value" id="windValue">-- m/s</div>
+                    </div>
+                </div>
+
+                <!-- Pressure Card -->
+                <div class="stat-card animated-card" style="animation-delay: 0.4s">
+                    <div class="stat-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Pressure</div>
+                        <div class="stat-value" id="pressureValue">-- hPa</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AQI Scale Reference -->
+            <div class="aqi-scale-card animated-card" style="animation-delay: 0.5s">
+                <h3>AQI Scale Reference</h3>
+                <div class="scale-bars">
+                    <div class="scale-item good">
+                        <span class="scale-range">0-50</span>
+                        <span class="scale-label">Good</span>
+                    </div>
+                    <div class="scale-item moderate">
+                        <span class="scale-range">51-100</span>
+                        <span class="scale-label">Moderate</span>
+                    </div>
+                    <div class="scale-item unhealthy-sensitive">
+                        <span class="scale-range">101-150</span>
+                        <span class="scale-label">Unhealthy for Sensitive</span>
+                    </div>
+                    <div class="scale-item unhealthy">
+                        <span class="scale-range">151-200</span>
+                        <span class="scale-label">Unhealthy</span>
+                    </div>
+                    <div class="scale-item very-unhealthy">
+                        <span class="scale-range">201-300</span>
+                        <span class="scale-label">Very Unhealthy</span>
+                    </div>
+                    <div class="scale-item hazardous">
+                        <span class="scale-range">300+</span>
+                        <span class="scale-label">Hazardous</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pollutants Grid -->
+            <div class="pollutants-section">
+                <h2 class="section-title">Pollutant Concentrations</h2>
+                <div class="pollutants-grid">
+                    <div class="pollutant-card animated-card" style="animation-delay: 0.6s">
+                        <div class="pollutant-icon pm25">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                        </div>
+                        <div class="pollutant-name">PM<sub>2.5</sub></div>
+                        <div class="pollutant-value" id="pm25Value">--</div>
+                        <div class="pollutant-unit">μg/m³</div>
+                    </div>
+                    
+                    <div class="pollutant-card animated-card" style="animation-delay: 0.7s">
+                        <div class="pollutant-icon pm10">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <circle cx="12" cy="12" r="8"/>
+                            </svg>
+                        </div>
+                        <div class="pollutant-name">PM<sub>10</sub></div>
+                        <div class="pollutant-value" id="pm10Value">--</div>
+                        <div class="pollutant-unit">μg/m³</div>
+                    </div>
+                    
+                    <div class="pollutant-card animated-card" style="animation-delay: 0.8s">
+                        <div class="pollutant-icon o3">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                        </div>
+                        <div class="pollutant-name">O<sub>3</sub></div>
+                        <div class="pollutant-value" id="o3Value">--</div>
+                        <div class="pollutant-unit">μg/m³</div>
+                    </div>
+                    
+                    <div class="pollutant-card animated-card" style="animation-delay: 0.9s">
+                        <div class="pollutant-icon no2">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2v20M2 12h20"/>
+                            </svg>
+                        </div>
+                        <div class="pollutant-name">NO<sub>2</sub></div>
+                        <div class="pollutant-value" id="no2Value">--</div>
+                        <div class="pollutant-unit">μg/m³</div>
+                    </div>
+                    
+                    <div class="pollutant-card animated-card" style="animation-delay: 1s">
+                        <div class="pollutant-icon so2">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            </svg>
+                        </div>
+                        <div class="pollutant-name">SO<sub>2</sub></div>
+                        <div class="pollutant-value" id="so2Value">--</div>
+                        <div class="pollutant-unit">μg/m³</div>
+                    </div>
+                    
+                    <div class="pollutant-card animated-card" style="animation-delay: 1.1s">
+                        <div class="pollutant-icon co">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 8v8m-4-4h8"/>
+                            </svg>
+                        </div>
+                        <div class="pollutant-name">CO</div>
+                        <div class="pollutant-value" id="coValue">--</div>
+                        <div class="pollutant-unit">μg/m³</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="chart-section animated-card" style="animation-delay: 1.2s">
+                <div class="chart-header">
+                    <h2>24-Hour AQI Trend</h2>
+                    <div class="chart-controls">
+                        <button class="chart-btn active" data-period="24h">24H</button>
+                        <button class="chart-btn" data-period="week">Week</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+                <p class="chart-note">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+                    </svg>
+                    Color reflects current AQI category
+                </p>
+            </div>
+
+            <!-- Health Recommendations -->
+            <div class="recommendations-section animated-card" style="animation-delay: 1.3s">
+                <div class="recommendations-header">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                    <h2>Health Recommendations</h2>
+                </div>
+                <ul class="recommendations-list" id="healthRecommendations">
+                    <li class="recommendation-item">
+                        <span class="recommendation-icon">🏃</span>
+                        <span>Loading recommendations...</span>
+                    </li>
+                </ul>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="modern-footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                    </svg>
+                    <span>GreenTrack</span>
+                </div>
+                <p class="footer-text">Data provided by <a href="https://aqicn.org" target="_blank" rel="noopener">World Air Quality Index Project</a></p>
+                <p class="footer-disclaimer">⚠️ For educational purposes only</p>
+                <div class="footer-links">
+                    <a href="https://github.com" target="_blank" rel="noopener" aria-label="GitHub">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" rel="noopener" aria-label="Twitter">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Keyboard Shortcuts Panel -->
+    <div class="shortcuts-panel" id="shortcutsPanel">
+        <h4>⌨️ Keyboard Shortcuts</h4>
+        <div class="shortcut-item">
+            <span class="shortcut-key">?</span>
+            <span class="shortcut-desc">Show shortcuts</span>
+        </div>
+        <div class="shortcut-item">
+            <span class="shortcut-key">R</span>
+            <span class="shortcut-desc">Refresh data</span>
+        </div>
+        <div class="shortcut-item">
+            <span class="shortcut-key">T</span>
+            <span class="shortcut-desc">Toggle theme</span>
+        </div>
+        <div class="shortcut-item">
+            <span class="shortcut-key">C</span>
+            <span class="shortcut-desc">Go to Cities</span>
+        </div>
+        <div class="shortcut-item">
+            <span class="shortcut-key">H</span>
+            <span class="shortcut-desc">Go to Trends</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="modern-script.js"></script>
+</body>
+</html>

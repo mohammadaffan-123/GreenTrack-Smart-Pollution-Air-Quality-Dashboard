@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AQI Trends</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="nav.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <header class="dashboard-header">
+      <nav class="top-nav">
+        <a href="index.html" class="brand">AQI Monitor</a>
+        <ul class="nav-links">
+          <li><a href="index.html">Dashboard</a></li>
+          <li><a href="trends.html">Trends</a></li>
+          <li><a href="pollutants.html">Pollutants</a></li>
+          <li><a href="alerts.html">Alerts</a></li>
+          <li><a href="cities.html">Cities</a></li>
+        </ul>
+      </nav>
+  <h1>Trends</h1>
+  <p style="margin-top:8px"><a href="index.html" class="brand" style="text-decoration:underline;">← Back to Dashboard</a></p>
+      <p class="location" id="trendLocation">Loading...</p>
+    </header>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>24-Hour PM<sub>2.5</sub> Trend</h2>
+        <div class="input-group">
+          <input id="trendCityInput" type="text" placeholder="Enter city (e.g., New Delhi)" />
+          <button id="trendFetchBtn">Update</button>
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas id="trendPageChart"></canvas>
+      </div>
+      <p class="chart-legend-note">Line color reflects current AQI category.</p>
+    </div>
+
+    <footer class="dashboard-footer">
+      <p>Data provided by World Air Quality Index Project</p>
+    </footer>
+  </div>
+
+  <script src="utils.js"></script>
+  <script src="trends.js"></script>
+</body>
+</html>

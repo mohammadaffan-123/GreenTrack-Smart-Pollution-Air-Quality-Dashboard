@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AQI Alerts</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="nav.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <header class="dashboard-header">
+      <nav class="top-nav">
+        <a href="index.html" class="brand">AQI Monitor</a>
+        <ul class="nav-links">
+          <li><a href="index.html">Dashboard</a></li>
+          <li><a href="trends.html">Trends</a></li>
+          <li><a href="pollutants.html">Pollutants</a></li>
+          <li><a href="alerts.html">Alerts</a></li>
+          <li><a href="cities.html">Cities</a></li>
+        </ul>
+      </nav>
+  <h1>Alerts</h1>
+  <p style="margin-top:8px"><a href="index.html" class="brand" style="text-decoration:underline;">← Back to Dashboard</a></p>
+      <p class="location" id="alertLocation">Applies globally</p>
+    </header>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Critical AQI Threshold</h2>
+      </div>
+      <div class="input-group">
+        <input id="thresholdInput" type="number" min="0" max="500" step="1" placeholder="e.g., 150" />
+        <button id="saveThresholdBtn">Save</button>
+        <button id="testAlertBtn">Test Alert</button>
+      </div>
+      <p class="location" id="currentThresholdText">Current threshold: 150</p>
+      <p class="disclaimer">This threshold is used on the Dashboard page and saved in your browser.</p>
+    </div>
+
+    <div class="alert-banner" id="demoAlert" style="display:none;">
+      <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+        <line x1="12" y1="9" x2="12" y2="13"></line>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+      </svg>
+      <div class="alert-content">
+        <strong>Dangerous Air Quality Alert (Demo)</strong>
+        <p>This is a preview of the alert banner.</p>
+      </div>
+    </div>
+
+    <footer class="dashboard-footer">
+      <p>Tip: Go back to the Dashboard to see alerts in action.</p>
+    </footer>
+  </div>
+
+  <script src="alerts.js"></script>
+</body>
+</html>

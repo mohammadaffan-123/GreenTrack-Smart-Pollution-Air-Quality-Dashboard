@@ -1,0 +1,35 @@
+{
+  "name": "GreenTrack — Smart Pollution & Air Quality Dashboard",
+  "short_name": "GreenTrack",
+  "description": "Real-time air quality and pollution monitoring dashboard with health recommendations and trends",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0a0e27",
+  "theme_color": "#667eea",
+  "orientation": "portrait-primary",
+  "categories": ["weather", "health", "environment"],
+  "lang": "en-US",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjdlZWEiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI5Ij48L2NpcmNsZT48cGF0aCBkPSJtMTIgMTJ2NmwxIDF2LTZsLTEtMXoiPjwvcGF0aD48L3N2Zz4=",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjdlZWEiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI5Ij48L2NpcmNsZT48cGF0aCBkPSJtMTIgMTJ2NmwxIDF2LTZsLTEtMXoiPjwvcGF0aD48L3N2Zz4=",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4MCIgaGVpZ2h0PSI3MjAiIHZpZXdCb3g9IjAgMCAxMjgwIDcyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTI4MCIgaGVpZ2h0PSI3MjAiIGZpbGw9IiMwYTBlMjciLz48dGV4dCB4PSI2NDAiIHk9IjM2MCIgZm9udC1zaXplPSI0OCIgZmlsbD0iI2U4ZWFmNiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QXJpcyBRdWFsaXR5IERhc2hib2FyZDwvdGV4dD48L3N2Zz4=",
+      "sizes": "1280x720",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    }
+  ]
+}
